@@ -110,6 +110,11 @@ export default defineComponent({
       demo.uiSchemaCode = toJson(d.uiSchema);
     });
 
+    const handleChange = (v: any) => {
+      demo.data = v;
+      demo.dataCode = toJson(v);
+    };
+
     // closure 闭包 demo
     function handleCodeChange(
       field: "schema" | "data" | "uiSchema",
@@ -120,7 +125,7 @@ export default defineComponent({
         demo[field] = json;
         (demo as any)[`${field}Code`] = value;
       } catch (err) {
-        // some thing
+        // dp something
       }
     }
 
@@ -180,7 +185,11 @@ export default defineComponent({
             </div>
             {/* /.code */}
             <div class={classes.form}>
-              <SchemaForm />
+              <SchemaForm
+                schema={demo.schema}
+                onChange={handleChange}
+                value={demo.data}
+              />
               {/* <ThemeProvider theme={themeDefault as any}>
                 <SchemaForm
                   schema={demo.schema}
