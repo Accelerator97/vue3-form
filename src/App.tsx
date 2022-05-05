@@ -78,9 +78,9 @@ const useStyles = createUseStyles({
 
 export default defineComponent({
   setup() {
-    const schemaRef: Ref<any> = ref(schema);
-    // tab switch
+    // tab栏切换
     const selectedRef: Ref<number> = ref(0);
+    // 定义一个响应式对象
     const demo: {
       schema: Schema | null;
       data: any;
@@ -125,7 +125,7 @@ export default defineComponent({
         demo[field] = json;
         (demo as any)[`${field}Code`] = value;
       } catch (err) {
-        // dp something
+        // do nothing
       }
     }
 
@@ -133,9 +133,10 @@ export default defineComponent({
     const handleDataChange = (v: string) => handleCodeChange("data", v);
     const handleUISchemaChange = (v: string) => handleCodeChange("uiSchema", v);
 
+    // css样式
     const classesRef = useStyles();
+
     return () => {
-      const code = toJson(schemaRef.value);
       const classes = classesRef.value;
       const selected = selectedRef.value;
       return (
@@ -157,7 +158,7 @@ export default defineComponent({
                 </button>
               ))}
             </div>
-          </div>{" "}
+          </div>
           {/* /.menu */}
           <div class={classes.content}>
             <div class={classes.code}>
