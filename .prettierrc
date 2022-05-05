@@ -4,4 +4,5 @@
     "arrowParens":"always",
     "trailingComma":"all",
     "endOfLine": "lf"
+    
 }

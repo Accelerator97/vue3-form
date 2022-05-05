@@ -11,13 +11,18 @@
   "dependencies": {
     "ajv": "^8.11.0",
     "core-js": "^3.8.3",
+    "json-schema-merge-allof": "^0.7.0",
+    "jsonpointer": "^4.1.0",
     "jss": "^10.9.0",
     "jss-preset-default": "^10.9.0",
+    "lodash.union": "^4.6.0",
     "vue": "^3.2.13",
     "vue-jss": "^0.0.4"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/json-schema-merge-allof": "^0.6.0",
+    "@types/lodash.union": "^4.6.6",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/babel-plugin-jsx": "^1.1.1",
@@ -37,6 +42,7 @@
     "jest": "^27.0.5",
     "lint-staged": "^11.1.2",
     "monaco-editor": "^0.33.0",
+    "monaco-editor-webpack-plugin": "^7.0.1",
     "prettier": "^2.4.1",
     "ts-jest": "^27.0.4",
     "typescript": "~4.5.5"

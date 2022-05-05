@@ -2,13 +2,14 @@ import { defineComponent, PropType } from "vue";
 import NumberField from "./fields/NumberField";
 import StringField from "./fields/StringField";
 import { Schema, SchemaTypes, FiledPropsDefine } from "./type";
-
+import { retrieveSchema } from "./utils";
 export default defineComponent({
   name: "SchemaItem",
   props: FiledPropsDefine,
   setup(props, { slots, emit, attrs }) {
     return () => {
       const schema = props.schema;
+      const retrieveSchema = retrieveSchema(schema);
       // TODO:如果type没有指定 我们需要猜测这个type
       const type = schema?.type;
       let Component: any;

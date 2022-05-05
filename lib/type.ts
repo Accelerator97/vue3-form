@@ -13,23 +13,40 @@ export enum SchemaTypes {
 type SchemaRef = { $ref: string };
 
 export interface Schema {
-  type: SchemaTypes | string;
+  type?: SchemaTypes | string;
   const?: any;
   format?: string;
+
+  title?: string;
   default?: any;
+
   properties?: {
-    [key: string]: Schema | { $refs: string };
+    [key: string]: Schema;
   };
   items?: Schema | Schema[] | SchemaRef;
+  uniqueItems?: any;
   dependencies?: {
     [key: string]: string[] | Schema | SchemaRef;
   };
   oneOf?: Schema[];
+  anyOf?: Schema[];
+  allOf?: Schema[];
+  // TODO: uiSchema
+  // vjsf?: VueJsonSchemaConfig
   required?: string[];
   enum?: any[];
+  enumNames?: any[];
   enumKeyValue?: any[];
   additionalProperties?: any;
-  additionalItem?: Schema;
+  additionalItems?: Schema;
+
+  minLength?: number;
+  maxLength?: number;
+  minimum?: number;
+  maximum?: number;
+  multipleOf?: number;
+  exclusiveMaximum?: number;
+  exclusiveMinimum?: number;
 }
 
 export const FiledPropsDefine = {

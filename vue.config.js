@@ -1,5 +1,9 @@
-const { defineConfig } = require("@vue/cli-service");
-module.exports = defineConfig({
-  transpileDependencies: true,
-  lintOnSave: false
-});
+const MonocoWebpackPlugin = require("monaco-editor-webpack-plugin")
+
+module.exports = {
+  lintOnSave: false,
+  chainWebpack(config){
+    config.plugin('monaco').use(new MonocoWebpackPlugin())
+  }
+}
+
