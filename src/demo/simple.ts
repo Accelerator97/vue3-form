@@ -2,7 +2,7 @@ export default {
   name: "Simple",
   schema: {
     description: "A simple form example.",
-    type: "string",
+    type: "object",
     required: ["firstName", "lastName"],
     properties: {
       firstName: {
@@ -20,14 +20,25 @@ export default {
         minLength: 10,
         title: "telephone",
       },
-      multiTypeArray: {
+      staticArray: {
         type: "array",
         items: [
-          { type: "string", title: "string" },
-          { type: "number", title: "number" },
+          {
+            type: "number",
+          },
+          {
+            type: "string",
+          },
         ],
-        title: "multiTypeArray",
       },
+      // multiTypeArray: {
+      //   type: "array",
+      //   items: [
+      //     { type: "string", title: "string" },
+      //     { type: "number", title: "number" },
+      //   ],
+      //   title: "multiTypeArray",
+      // },
       singleTypeArray: {
         type: "array",
         title: "singleTypeArray",

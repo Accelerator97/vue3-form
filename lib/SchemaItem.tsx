@@ -2,6 +2,7 @@ import { computed, defineComponent, PropType } from "vue";
 import NumberField from "./fields/NumberField";
 import StringField from "./fields/StringField";
 import ObjectField from "./fields/ObjectField";
+import ArrayField from "./fields/ArrayField";
 import { SchemaTypes, FiledPropsDefine } from "./type";
 import { retrieveSchema } from "./utils";
 export default defineComponent({
@@ -14,7 +15,7 @@ export default defineComponent({
       return retrieveSchema(schema, rootSchema, value);
     });
     return () => {
-      const { schema, rootSchema, value } = props;
+      const { schema } = props;
       const retrievedSchema = retrievedSchemaRef.value;
       // TODO:如果type没有指定 我们需要猜测这个type
       const type = schema?.type;
@@ -30,6 +31,10 @@ export default defineComponent({
         }
         case SchemaTypes.OBJECT: {
           Component = ObjectField;
+          break;
+        }
+        case SchemaTypes.ARRAY: {
+          Component = ArrayField;
           break;
         }
         default: {

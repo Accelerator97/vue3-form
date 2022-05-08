@@ -4,9 +4,19 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "NumberField",
   props: FiledPropsDefine,
-  setup() {
+  setup(props) {
+    const handleChange = (e: any) => {
+      const value = e.target.value;
+      const num = Number(value);
+      if (Number.isNaN(num)) {
+        props.onChange(undefined);
+      } else {
+        props.onChange(num);
+      }
+    };
     return () => {
-      return <div>Number</div>;
+      const { value } = props;
+      return <input type="number" value={value} onInput={handleChange} />;
     };
   },
 });

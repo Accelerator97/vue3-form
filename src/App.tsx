@@ -115,7 +115,7 @@ export default defineComponent({
       demo.dataCode = toJson(v);
     };
 
-    // closure 闭包 demo
+    // 在编辑器里修改demo的数据（工厂函数）
     function handleCodeChange(
       field: "schema" | "data" | "uiSchema",
       value: string,
