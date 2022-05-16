@@ -6,7 +6,7 @@ import themeDefault from "../lib/theme-default";
 import demos from "./demo";
 
 // 导入组件库
-import SchemaForm from "../lib";
+import SchemaForm, { ThemeProvider } from "../lib";
 
 // TODO:需要在lib中导出
 type Schema = any;
@@ -187,12 +187,13 @@ export default defineComponent({
             </div>
             {/* /.code */}
             <div class={classes.form}>
-              <SchemaForm
-                schema={demo.schema}
-                theme={themeDefault as any}
-                onChange={handleChange}
-                value={demo.data}
-              />
+              <ThemeProvider theme={themeDefault as any}>
+                <SchemaForm
+                  schema={demo.schema}
+                  onChange={handleChange}
+                  value={demo.data}
+                />
+              </ThemeProvider>
               {/* <ThemeProvider theme={themeDefault as any}>
                 <SchemaForm
                   schema={demo.schema}

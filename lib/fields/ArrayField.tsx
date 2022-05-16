@@ -2,6 +2,7 @@ import { defineComponent, PropType } from "vue";
 import { FiledPropsDefine, Schema } from "../type";
 import { useVJSFContext } from "../context";
 import { createUseStyles } from "vue-jss";
+import { getWidgets } from "../theme";
 
 const useStyles = createUseStyles({
   container: {
@@ -82,6 +83,7 @@ export default defineComponent({
   props: FiledPropsDefine,
   setup(props) {
     const context = useVJSFContext();
+    const SelectioWidgeRef = getWidgets("SelectionWidget");
     const handleArrayItemChange = (v: any, index: number) => {
       const { value } = props;
       const arr = Array.isArray(value) ? value : [];
@@ -122,7 +124,8 @@ export default defineComponent({
       const isMultiType = Array.isArray(schema.items);
       // 判断是否是数组第一种形式
       const isSelect = schema.items && (schema.items as any).enum;
-      const SelectionWidget = context.theme.widgets.SelectionWidget;
+      // const SelectionWidget = context.theme.widgets.SelectionWidget;
+      const SelectionWidget = SelectioWidgeRef.value;
       if (isMultiType) {
         const items: Schema[] = schema.items as any;
         const arr = Array.isArray(value) ? value : [];
