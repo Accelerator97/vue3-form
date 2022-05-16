@@ -2,7 +2,6 @@ import { defineComponent, PropType } from "vue";
 import { FiledPropsDefine, Schema } from "../type";
 import { useVJSFContext } from "../context";
 import { createUseStyles } from "vue-jss";
-import SelectionWidGet from "../widgets/selection";
 
 const useStyles = createUseStyles({
   container: {
@@ -123,7 +122,7 @@ export default defineComponent({
       const isMultiType = Array.isArray(schema.items);
       // 判断是否是数组第一种形式
       const isSelect = schema.items && (schema.items as any).enum;
-
+      const SelectionWidget = context.theme.widgets.SelectionWidget;
       if (isMultiType) {
         const items: Schema[] = schema.items as any;
         const arr = Array.isArray(value) ? value : [];
@@ -169,11 +168,11 @@ export default defineComponent({
           value: e,
         }));
         return (
-          <SelectionWidGet
+          <SelectionWidget
             onChange={props.onChange}
             value={props.value}
             options={options}
-          ></SelectionWidGet>
+          ></SelectionWidget>
         );
       }
     };

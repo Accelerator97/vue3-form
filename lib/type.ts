@@ -1,4 +1,4 @@
-import { PropType, DefineComponent } from "vue";
+import { PropType, DefineComponent, Prop } from "vue";
 
 export enum SchemaTypes {
   "NUMBER" = "number",
@@ -67,4 +67,48 @@ export const FiledPropsDefine = {
   },
 } as const;
 
-export type CommonFieldType = DefineComponent<typeof FiledPropsDefine>;
+export type CommonFieldType = DefineComponent<typeof FiledPropsDefine, {}, {}>;
+
+// props类型
+const CommonWidgetsPropsDefined = {
+  value: {},
+  onChange: {
+    type: Function as PropType<(v: any) => void>,
+    required: true,
+  },
+} as const;
+
+const SelectionWidgetsPropsDefined = {
+  ...CommonWidgetsPropsDefined,
+  options: {
+    // 注意这种对象数组类型的写法
+    type: Array as PropType<
+      {
+        key: string;
+        value: any;
+      }[]
+    >,
+    required: true,
+  },
+} as const;
+
+// 主题系统组件的类型
+type CommonWidgetsDefined = DefineComponent<
+  typeof CommonWidgetsPropsDefined,
+  {},
+  {}
+>;
+
+type SelectionWidgetDefined = DefineComponent<
+  typeof SelectionWidgetsPropsDefined,
+  {},
+  {}
+>;
+
+export interface Theme {
+  widgets: {
+    SelectionWidget: SelectionWidgetDefined;
+    TextWidget: CommonWidgetsDefined;
+    NumberWidget: CommonWidgetsDefined;
+  };
+}
