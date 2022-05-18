@@ -1,4 +1,4 @@
-import SelectionWidget from "./selection";
+import SelectionWidget from "./SelectionWidget";
 import { CommonWidgetsPropsDefined, CommonWidgetsDefined } from "../type";
 import { defineComponent } from "vue";
 
