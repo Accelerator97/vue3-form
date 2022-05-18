@@ -1,5 +1,5 @@
 import { defineComponent, PropType } from "vue";
-import { FiledPropsDefine, Schema } from "../type";
+import { FiledPropsDefine, Schema, SelectionWidgetNames } from "../type";
 import { useVJSFContext } from "../context";
 import { createUseStyles } from "vue-jss";
 import { getWidgets } from "../theme";
@@ -83,7 +83,7 @@ export default defineComponent({
   props: FiledPropsDefine,
   setup(props) {
     const context = useVJSFContext();
-    const SelectioWidgeRef = getWidgets("SelectionWidget");
+    const SelectioWidgeRef = getWidgets(SelectionWidgetNames.SelectionWidget);
     const handleArrayItemChange = (v: any, index: number) => {
       const { value } = props;
       const arr = Array.isArray(value) ? value : [];

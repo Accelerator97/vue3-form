@@ -70,7 +70,7 @@ export const FiledPropsDefine = {
 export type CommonFieldType = DefineComponent<typeof FiledPropsDefine, {}, {}>;
 
 // props类型
-const CommonWidgetsPropsDefined = {
+export const CommonWidgetsPropsDefined = {
   value: {},
   onChange: {
     type: Function as PropType<(v: any) => void>,
@@ -78,7 +78,7 @@ const CommonWidgetsPropsDefined = {
   },
 } as const;
 
-const SelectionWidgetsPropsDefined = {
+export const SelectionWidgetsPropsDefined = {
   ...CommonWidgetsPropsDefined,
   options: {
     // 注意这种对象数组类型的写法
@@ -93,22 +93,31 @@ const SelectionWidgetsPropsDefined = {
 } as const;
 
 // 主题系统组件的类型
-type CommonWidgetsDefined = DefineComponent<
+export type CommonWidgetsDefined = DefineComponent<
   typeof CommonWidgetsPropsDefined,
   {},
   {}
 >;
 
-type SelectionWidgetDefined = DefineComponent<
+export type SelectionWidgetDefined = DefineComponent<
   typeof SelectionWidgetsPropsDefined,
   {},
   {}
 >;
 
+export enum SelectionWidgetNames {
+  SelectionWidget = "SelectionWidget",
+}
+
+export enum CommonWidgetsNames {
+  TextWidget = "TextWidget",
+  NumberWidget = "NumberWidget",
+}
+
 export interface Theme {
   widgets: {
-    SelectionWidget: SelectionWidgetDefined;
-    TextWidget: CommonWidgetsDefined;
-    NumberWidget: CommonWidgetsDefined;
+    [SelectionWidgetNames.SelectionWidget]: SelectionWidgetDefined;
+    [CommonWidgetsNames.TextWidget]: CommonWidgetsDefined;
+    [CommonWidgetsNames.NumberWidget]: CommonWidgetsDefined;
   };
 }

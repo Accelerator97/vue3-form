@@ -187,7 +187,7 @@ export default defineComponent({
             </div>
             {/* /.code */}
             <div class={classes.form}>
-              <ThemeProvider theme={themeDefault as any}>
+              <ThemeProvider theme={themeDefault}>
                 <SchemaForm
                   schema={demo.schema}
                   onChange={handleChange}

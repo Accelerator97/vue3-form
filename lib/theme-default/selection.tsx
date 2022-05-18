@@ -1,24 +1,9 @@
 import { defineComponent, PropType, ref, watch, watchEffect } from "vue";
+import { SelectionWidgetsPropsDefined, SelectionWidgetDefined } from "../type";
 
-export default defineComponent({
+const Selection: SelectionWidgetDefined = defineComponent({
   name: "SelectionWidget",
-  props: {
-    value: {},
-    onChange: {
-      type: Function as PropType<(v: any) => void>,
-      required: true,
-    },
-    options: {
-      // 注意这种对象数组类型的写法
-      type: Array as PropType<
-        {
-          key: string;
-          value: any;
-        }[]
-      >,
-      required: true,
-    },
-  },
+  props: SelectionWidgetsPropsDefined,
   setup(props) {
     // 因为不能通过v-model 修改props的value 所以创建一个响应式数据
     const currentValueRef = ref(props.value);
@@ -47,4 +32,6 @@ export default defineComponent({
       );
     };
   },
-});
+}) as SelectionWidgetDefined;
+
+export default Selection;

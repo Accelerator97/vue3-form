@@ -6,7 +6,7 @@ import {
   inject,
   ComputedRef,
 } from "vue";
-import { Theme } from "./type";
+import { Theme, SelectionWidgetNames, CommonWidgetsNames } from "./type";
 
 const THEME_PROVIDER_KEY = Symbol();
 
@@ -23,7 +23,9 @@ const ThemeProvider = defineComponent({
   },
 });
 
-export function getWidgets(name: string) {
+export function getWidgets<T extends CommonWidgetsNames | SelectionWidgetNames>(
+  name: T,
+) {
   const context: ComputedRef<Theme> | undefined =
     inject<ComputedRef<Theme>>(THEME_PROVIDER_KEY);
   if (!context) {
@@ -32,7 +34,7 @@ export function getWidgets(name: string) {
 
   // 如果 const widget = context.value.widgets[name] 那么widget的值不为响应式了 要写成computed形式
   const widgetRef = computed(() => {
-    return (context.value.widgets as any)[name];
+    return context.value.widgets[name];
   });
   return widgetRef;
 }
