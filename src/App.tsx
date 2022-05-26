@@ -134,6 +134,8 @@ export default defineComponent({
     const handleDataChange = (v: string) => handleCodeChange("data", v);
     const handleUISchemaChange = (v: string) => handleCodeChange("uiSchema", v);
 
+    const contextRef = ref();
+
     // css样式
     const classesRef = useStyles();
 
@@ -192,6 +194,7 @@ export default defineComponent({
                   schema={demo.schema}
                   onChange={handleChange}
                   value={demo.data}
+                  contextRef={contextRef}
                 />
               </ThemeProvider>
               {/* <ThemeProvider theme={themeDefault as any}>
@@ -207,7 +210,13 @@ export default defineComponent({
                   customKeywords={customKeyword}
                 />
               </ThemeProvider> */}
-              {/* <button onClick={validateForm}>校验</button> */}
+              <button
+                onClick={() => {
+                  console.log(contextRef.value.doValidate());
+                }}
+              >
+                校验
+              </button>
             </div>
           </div>
         </div>

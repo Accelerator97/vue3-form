@@ -1,8 +1,29 @@
-import { defineComponent, PropType, provide } from "vue";
-import { Schema, Theme } from "./type";
+import {
+  defineComponent,
+  PropType,
+  provide,
+  Ref,
+  shallowRef,
+  watch,
+  watchEffect,
+} from "vue";
+import { Schema } from "./type";
 import SchemaItem from "./SchemaItem";
+import Ajv, { Options } from "ajv";
 
 import { SchemaFormContextKey } from "./context";
+
+interface ContextRef {
+  doValidate: () => {
+    errors: any[];
+    valid: boolean;
+  };
+}
+
+const defaultAjvOptions: Options = {
+  allErrors: true,
+  // jsonPointers: true,
+};
 
 export default defineComponent({
   name: "SchemaForm",
@@ -18,6 +39,12 @@ export default defineComponent({
       type: Function as PropType<(v: any) => void>,
       required: true,
     },
+    contextRef: {
+      type: Object as PropType<Ref<ContextRef | undefined>>,
+    },
+    ajvOptions: {
+      type: Object as PropType<Options>,
+    },
   },
   setup(props, { slots, emit, attrs }) {
     const handleChange = (v: any) => {
@@ -27,6 +54,40 @@ export default defineComponent({
     const context = {
       SchemaItem,
     };
+
+    // 创建validateRef，并且用watchEffect监听，当传进来的props.ajvOptions变化时及时更新
+
+    const validateRef: Ref<Ajv> = shallowRef(new Ajv());
+
+    watchEffect(() => {
+      validateRef.value = new Ajv({
+        ...defaultAjvOptions,
+        ...props.ajvOptions,
+      });
+    });
+
+    watch(
+      () => props.contextRef,
+      () => {
+        if (props.contextRef) {
+          props.contextRef.value = {
+            doValidate() {
+              const valid = validateRef.value.validate(
+                props.schema,
+                props.value,
+              ) as boolean;
+              return {
+                valid,
+                errors: validateRef.value.errors || [],
+              };
+            },
+          };
+        }
+      },
+      {
+        immediate: true,
+      },
+    );
 
     provide(SchemaFormContextKey, context);
 

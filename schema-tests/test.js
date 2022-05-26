@@ -1,34 +1,111 @@
-const Ajv = require("ajv")
-const addFormats = require('ajv-formats')
-const ajv = new Ajv()
-// addFormats(ajv)
-// ajv.addFormat('test',(data)=>{
-//   // data是用户传入的对应的字段的值
-//   console.log('---------',data)
-//   return data === 'haha'
-// })
-ajv.addKeyword({
-  keyword: 'test',
-  // compile最后要return出来一个函数（重要）
-  compile(sch,parentSchema){
-    // sch 是 定义keyword时的值，parentSchema是这个keyword所在schema的信息
-    return ()=> true
-  },
-  errors: false
-})
+// Node.js require:
+const Ajv = require("ajv").default;
+const addFormats = require("ajv-formats");
 
 const schema = {
   type: "object",
   properties: {
-    email: {type: "string",test:false},
-    bar: {type: "string"},
+    name: {
+      type: "string",
+      // format: 'test',
+      test: "true",
+      minLength: 10,
+      errorMessage: {
+        type: "必须是字符串",
+        test: "自定义关键字验证 test 失败了",
+        minLength: "长度不能小于10",
+      },
+    },
+    age: {
+      type: "number",
+    },
+    pets: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+    isWorker: {
+      type: "boolean",
+    },
   },
-  required: ["email"],
-  additionalProperties: false
+  required: ["name", "age"],
+};
+
+const ajv = new Ajv({ allErrors: true }); // options can be passed, e.g. {allErrors: true}
+addFormats(ajv);
+require("ajv-errors")(ajv /*, {singleError: true} */);
+
+// 自定义format: 'test'
+// https://ajv.js.org/docs/api.html#api-addformat
+ajv.addFormat("test", (data) => {
+  console.log(data, "---------------");
+  return data === "haha";
+});
+ajv.addKeyword({
+  keyword: "test",
+  validate: function foo(schema, data) {
+    console.log(schema, data);
+    foo.errors = [
+      {
+        keyword: "test",
+        dataPath: "/name",
+        schemaPath: "#/properties/name/test",
+        params: {},
+        message: "验证未通过，测试 ajv 自定义错误信息，i18n",
+      },
+    ];
+    return true;
+  },
+  // compile(sch, parentSchema) {
+  //   console.log(sch, parentSchema)
+  //   return () => true
+  // },
+  macro() {
+    return {
+      minLength: 10,
+    };
+  },
+  metaSchema: {
+    // schema to validate keyword value
+    type: "string",
+  },
+  // errors: false,
+});
+const validate = ajv.compile(schema);
+const valid = validate({
+  name: "234",
+  age: 18,
+  pets: ["mini", "mama"],
+  isWorker: true,
+});
+
+if (!valid) {
+  console.log(validate.errors);
 }
+// node schema-tests/test1.js
 
-const data = {email: "123", bar: "abc"}
-const validate = ajv.compile(schema)
-const valid = validate(data)
-if (!valid) console.log(validate.errors)
-
+// ➜  vue3-json-schema-form git:(main) ✗ node schema-tests/test1.js
+// [
+//   {
+//     keyword: 'minLength',
+//     dataPath: '/name',
+//     schemaPath: '#/properties/name/test/minLength',
+//     params: { limit: 10 },
+//     message: '不应少于 10 个字符'
+//   },
+//   {
+//     keyword: 'errorMessage',
+//     dataPath: '/name',
+//     schemaPath: '#/properties/name/errorMessage',
+//     params: { errors: [Array] },
+//     message: '自定义关键字验证 test 失败了'
+//   },
+//   {
+//     keyword: 'errorMessage',
+//     dataPath: '/name',
+//     schemaPath: '#/properties/name/errorMessage',
+//     params: { errors: [Array] },
+//     message: '长度不能小于10'
+//   }
+// ]
