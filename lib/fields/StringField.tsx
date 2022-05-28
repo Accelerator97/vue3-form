@@ -13,10 +13,16 @@ export default defineComponent({
     const TextWidgetRef = getWidgets(CommonWidgetsNames.TextWidget);
     return () => {
       const TextWidget = TextWidgetRef.value;
-      const { schema, rootSchema, ...rest } = props;
+      const { schema, rootSchema, errorSchema, ...rest } = props;
       // 这种写法会有个弊端 导致因为...rest里也有onChange，用户又传了一个onChange
       // 编译的时候 onChange就会变成一个数组
-      return <TextWidget {...rest} onChange={handleChange}></TextWidget>;
+      return (
+        <TextWidget
+          {...rest}
+          error={errorSchema.__errors}
+          onChange={handleChange}
+        ></TextWidget>
+      );
     };
   },
 });

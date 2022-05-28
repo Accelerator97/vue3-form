@@ -10,6 +10,7 @@ import {
 import { Schema } from "./type";
 import SchemaItem from "./SchemaItem";
 import Ajv, { Options } from "ajv";
+import { validateFormData, ErrorSchema } from "./validator";
 
 import { SchemaFormContextKey } from "./context";
 
@@ -55,6 +56,8 @@ export default defineComponent({
       SchemaItem,
     };
 
+    const errorsSchemaRef: Ref<ErrorSchema> = shallowRef({});
+
     // 创建validateRef，并且用watchEffect监听，当传进来的props.ajvOptions变化时及时更新
 
     const validateRef: Ref<Ajv> = shallowRef(new Ajv());
@@ -72,14 +75,17 @@ export default defineComponent({
         if (props.contextRef) {
           props.contextRef.value = {
             doValidate() {
-              const valid = validateRef.value.validate(
-                props.schema,
+              // const valid = validateRef.value.validate(
+              //   props.schema,
+              //   props.value,
+              // ) as boolean;
+              const result = validateFormData(
+                validateRef.value,
                 props.value,
-              ) as boolean;
-              return {
-                valid,
-                errors: validateRef.value.errors || [],
-              };
+                props.schema,
+              );
+              errorsSchemaRef.value = result.errorSchema;
+              return result;
             },
           };
         }
@@ -99,6 +105,7 @@ export default defineComponent({
           value={value}
           rootSchema={schema}
           onChange={handleChange}
+          errorSchema={errorsSchemaRef.value || {}}
         />
       );
     };

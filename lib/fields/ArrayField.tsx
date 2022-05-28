@@ -119,7 +119,7 @@ export default defineComponent({
       props.onChange(arr);
     };
     return () => {
-      const { schema, rootSchema, value } = props;
+      const { schema, rootSchema, value, errorSchema } = props;
       const SchemaItem = context.SchemaItem;
       const isMultiType = Array.isArray(schema.items);
       // 判断是否是数组第一种形式
@@ -134,6 +134,7 @@ export default defineComponent({
             schema={s}
             rootSchema={rootSchema}
             value={arr[index]}
+            errorSchema={errorSchema[index] || {}}
             onChange={(v: any) => {
               handleArrayItemChange(v, index);
             }}
@@ -155,6 +156,7 @@ export default defineComponent({
                 schema={schema.items as any}
                 value={v}
                 key={index}
+                errorSchema={errorSchema[index] || {}}
                 rootSchema={rootSchema}
                 onChange={(v: any) => {
                   handleArrayItemChange(v, index);
@@ -175,6 +177,7 @@ export default defineComponent({
             onChange={props.onChange}
             value={props.value}
             options={options}
+            error={errorSchema.__errors}
           ></SelectionWidget>
         );
       }
