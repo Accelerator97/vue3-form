@@ -178,6 +178,7 @@ export default defineComponent({
             value={props.value}
             options={options}
             error={errorSchema.__errors}
+            schema={schema}
           ></SelectionWidget>
         );
       }
