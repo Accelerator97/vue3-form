@@ -89,6 +89,7 @@ export default defineComponent({
       schemaCode: string;
       dataCode: string;
       uiSchemaCode: string;
+      customValidate: ((data: any, error: any) => void) | undefined; // 自定义函数
     } = reactive({
       schema: null,
       data: {},
@@ -96,6 +97,7 @@ export default defineComponent({
       schemaCode: "",
       dataCode: "",
       uiSchemaCode: "",
+      customValidate: undefined, // 自定义函数
     });
 
     // 数据监听，确定 demo 的当前值
@@ -109,6 +111,7 @@ export default defineComponent({
       demo.schemaCode = toJson(d.schema);
       demo.dataCode = toJson(d.default);
       demo.uiSchemaCode = toJson(d.uiSchema);
+      demo.customValidate = d.customValidate;
     });
 
     const handleChange = (v: any) => {
@@ -135,6 +138,7 @@ export default defineComponent({
     const handleUISchemaChange = (v: string) => handleCodeChange("uiSchema", v);
 
     const contextRef = ref();
+    const nameRef = ref(); // 获取 SchemaForm 引用
 
     // css样式
     const classesRef = useStyles();
@@ -195,6 +199,8 @@ export default defineComponent({
                   onChange={handleChange}
                   value={demo.data}
                   contextRef={contextRef}
+                  ref={nameRef}
+                  customValidate={demo.customValidate}
                 />
               </ThemeProvider>
               {/* <ThemeProvider theme={themeDefault as any}>

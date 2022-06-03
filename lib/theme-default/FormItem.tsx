@@ -18,7 +18,7 @@ const useStyle = createUseStyles({
   },
 });
 
-export default defineComponent({
+const FormItem = defineComponent({
   name: "FormItem",
   props: CommonWidgetsPropsDefined,
   setup(props, { slots }) {
@@ -41,3 +41,22 @@ export default defineComponent({
     };
   },
 });
+
+export default FormItem;
+
+// HOC高阶组件
+export function withFormItem(Widget: any) {
+  return defineComponent({
+    name: `Wrapped${Widget}`,
+    props: CommonWidgetsPropsDefined,
+    setup(props, { attrs }) {
+      return () => {
+        return (
+          <FormItem {...props}>
+            <Widget {...props} {...attrs}></Widget>
+          </FormItem>
+        );
+      };
+    },
+  });
+}

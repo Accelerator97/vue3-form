@@ -46,6 +46,9 @@ export default defineComponent({
     ajvOptions: {
       type: Object as PropType<Options>,
     },
+    customValidate: {
+      type: Function as PropType<(data: any, errors: any) => void>,
+    },
   },
   setup(props, { slots, emit, attrs }) {
     const handleChange = (v: any) => {
@@ -75,14 +78,11 @@ export default defineComponent({
         if (props.contextRef) {
           props.contextRef.value = {
             doValidate() {
-              // const valid = validateRef.value.validate(
-              //   props.schema,
-              //   props.value,
-              // ) as boolean;
               const result = validateFormData(
                 validateRef.value,
                 props.value,
                 props.schema,
+                props.customValidate,
               );
               errorsSchemaRef.value = result.errorSchema;
               return result;
