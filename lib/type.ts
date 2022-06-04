@@ -70,6 +70,10 @@ export const FiledPropsDefine = {
     type: Object as PropType<ErrorSchema>,
     required: true,
   },
+  uiSchema: {
+    type: Object as PropType<uiSchema>,
+    required: true,
+  },
 } as const;
 
 export type CommonFieldType = DefineComponent<typeof FiledPropsDefine, {}, {}>;
@@ -132,4 +136,12 @@ export interface Theme {
     [CommonWidgetsNames.TextWidget]: CommonWidgetsDefined;
     [CommonWidgetsNames.NumberWidget]: CommonWidgetsDefined;
   };
+}
+
+export interface uiSchema {
+  widget?: string | CommonWidgetsDefined; // string是已经定义好的NumberWidget/SelectionWidget/TextWidget 后面CommonWidgetsDefined是用户自己定义
+  properties?: {
+    [key: string]: uiSchema; // 嵌套 向下传递uiSchema
+  };
+  items?: uiSchema | uiSchema[]; // 针对数组 单类型数组对应uiSchema 多类型数组对应uiSchema[]
 }

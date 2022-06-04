@@ -119,7 +119,7 @@ export default defineComponent({
       props.onChange(arr);
     };
     return () => {
-      const { schema, rootSchema, value, errorSchema } = props;
+      const { schema, rootSchema, value, errorSchema, uiSchema } = props;
       const SchemaItem = context.SchemaItem;
       const isMultiType = Array.isArray(schema.items);
       // 判断是否是数组第一种形式
@@ -129,17 +129,24 @@ export default defineComponent({
       if (isMultiType) {
         const items: Schema[] = schema.items as any;
         const arr = Array.isArray(value) ? value : [];
-        return items.map((s: Schema, index: number) => (
-          <SchemaItem
-            schema={s}
-            rootSchema={rootSchema}
-            value={arr[index]}
-            errorSchema={errorSchema[index] || {}}
-            onChange={(v: any) => {
-              handleArrayItemChange(v, index);
-            }}
-          />
-        ));
+        return items.map((s: Schema, index: number) => {
+          const itemuiSchema = uiSchema.items;
+          const ui = Array.isArray(itemuiSchema)
+            ? itemuiSchema[index] || {}
+            : itemuiSchema || {};
+          return (
+            <SchemaItem
+              schema={s}
+              uiSchema={ui}
+              rootSchema={rootSchema}
+              value={arr[index]}
+              errorSchema={errorSchema[index] || {}}
+              onChange={(v: any) => {
+                handleArrayItemChange(v, index);
+              }}
+            />
+          );
+        });
       } else if (!isSelect) {
         // 判断是否是数组第一种形式
         const arr = Array.isArray(value) ? value : [];
@@ -155,6 +162,7 @@ export default defineComponent({
               <SchemaItem
                 schema={schema.items as any}
                 value={v}
+                uiSchema={(uiSchema.items as any) || {}}
                 key={index}
                 errorSchema={errorSchema[index] || {}}
                 rootSchema={rootSchema}
