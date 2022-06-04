@@ -140,6 +140,12 @@ export default defineComponent({
     const contextRef = ref();
     const nameRef = ref(); // 获取 SchemaForm 引用
 
+    function validateForm() {
+      contextRef.value.doValidate().then((res: any) => {
+        console.log("result", res);
+      });
+    }
+
     // css样式
     const classesRef = useStyles();
 
@@ -216,13 +222,7 @@ export default defineComponent({
                   customKeywords={customKeyword}
                 />
               </ThemeProvider> */}
-              <button
-                onClick={() => {
-                  console.log(contextRef.value.doValidate());
-                }}
-              >
-                校验
-              </button>
+              <button onClick={validateForm}>校验</button>
             </div>
           </div>
         </div>

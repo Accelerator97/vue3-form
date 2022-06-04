@@ -25,7 +25,6 @@ const FormItem = defineComponent({
     const classRef = useStyle();
     return () => {
       const { schema, error } = props;
-      console.log("err", error);
       const classes = classRef.value;
       return (
         <div class={classes.container}>

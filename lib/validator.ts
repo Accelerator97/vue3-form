@@ -81,7 +81,7 @@ function transformErrors(
   });
 }
 
-export function validateFormData(
+export async function validateFormData(
   validator: Ajv,
   formData: any,
   schema: Schema,
@@ -122,7 +122,7 @@ export function validateFormData(
    * 对于customValidate，用proxy的方式在每个层级上添加_errors这个属性
    */
   const proxy = createErrorProxy();
-  customValidate(formData, proxy);
+  await customValidate(formData, proxy); // 使用await调用customValidate
   const newErrorSchema = mergetObjects(errorSchema, proxy);
   return {
     errors,

@@ -2,6 +2,7 @@ import {
   defineComponent,
   PropType,
   provide,
+  ref,
   Ref,
   shallowRef,
   watch,
@@ -15,10 +16,10 @@ import { validateFormData, ErrorSchema } from "./validator";
 import { SchemaFormContextKey } from "./context";
 
 interface ContextRef {
-  doValidate: () => {
+  doValidate: () => Promise<{
     errors: any[];
     valid: boolean;
-  };
+  }>;
 }
 
 const defaultAjvOptions: Options = {
@@ -71,6 +72,39 @@ export default defineComponent({
         ...props.ajvOptions,
       });
     });
+    const validateResolveRef = ref();
+    const validateIndex = ref(0);
+
+    // 监听数据变化重新校验 使用深度监听
+    watch(
+      () => props.value,
+      () => {
+        if (validateResolveRef.value) {
+          doValidate();
+        }
+      },
+      { deep: true },
+    );
+
+    async function doValidate() {
+      console.log("start validate -----");
+      const index = (validateIndex.value += 1);
+      const result = await validateFormData(
+        validateRef.value,
+        props.value,
+        props.schema,
+        props.customValidate,
+      );
+      // 执行完异步校验之后，根据index是否等于validateIndex.value
+      // 判断校验开始时的上下文 和 校验结束时的上下文是否一致
+      // 如果不一致，说明这中间已经发生了几次validate，之前的结果不再需要
+      if (index !== validateIndex.value) return;
+      console.log("end validate -------");
+      errorsSchemaRef.value = result.errorSchema;
+      // 把result作为函数参数传给用户自定义的异步校验函数
+      validateResolveRef.value(result);
+      validateResolveRef.value = undefined; // 清空validateRef
+    }
 
     watch(
       () => props.contextRef,
@@ -78,14 +112,11 @@ export default defineComponent({
         if (props.contextRef) {
           props.contextRef.value = {
             doValidate() {
-              const result = validateFormData(
-                validateRef.value,
-                props.value,
-                props.schema,
-                props.customValidate,
-              );
-              errorsSchemaRef.value = result.errorSchema;
-              return result;
+              // resolve就是用户传入的异步自定义校验函数
+              return new Promise((resolve) => {
+                validateResolveRef.value = resolve;
+                doValidate();
+              });
             },
           };
         }
