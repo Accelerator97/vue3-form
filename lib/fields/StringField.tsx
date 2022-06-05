@@ -1,4 +1,4 @@
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { FiledPropsDefine, CommonWidgetsNames } from "../type";
 import { getWidgets } from "../theme";
 
@@ -10,7 +10,16 @@ export default defineComponent({
     const handleChange = (v: string) => {
       props.onChange(v);
     };
-    const TextWidgetRef = getWidgets(CommonWidgetsNames.TextWidget);
+
+    // 用computed返回一个响应式对象，当uiSchema变化时 TextWidgetRef也会变化
+    const TextWidgetRef = computed(() => {
+      const widgetRef = getWidgets(
+        CommonWidgetsNames.TextWidget,
+        props.uiSchema,
+      );
+      return widgetRef.value;
+    });
+
     return () => {
       const TextWidget = TextWidgetRef.value;
       const { rootSchema, errorSchema, ...rest } = props;
@@ -19,7 +28,7 @@ export default defineComponent({
       return (
         <TextWidget
           {...rest}
-          error={errorSchema.__errors}
+          errors={errorSchema.__errors}
           onChange={handleChange}
         ></TextWidget>
       );

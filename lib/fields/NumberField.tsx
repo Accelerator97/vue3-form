@@ -23,7 +23,7 @@ export default defineComponent({
       return (
         <NumberWidget
           {...rest}
-          error={errorSchema.__errors}
+          errors={errorSchema.__errors}
           onChange={handleChange}
         />
       );

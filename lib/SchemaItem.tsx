@@ -18,7 +18,7 @@ export default defineComponent({
       const { schema } = props;
       const retrievedSchema = retrievedSchemaRef.value;
       // TODO:如果type没有指定 我们需要猜测这个type
-      const type = schema?.type;
+      const type = schema.type;
       let Component: any;
       switch (type) {
         case SchemaTypes.STRING: {

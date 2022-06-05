@@ -137,9 +137,9 @@ export default defineComponent({
         <SchemaItem
           schema={schema}
           value={value}
+          uiSchema={uiSchema || {}}
           rootSchema={schema}
           onChange={handleChange}
-          uiSchema={uiSchema || {}}
           errorSchema={errorsSchemaRef.value || {}}
         />
       );

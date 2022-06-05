@@ -1,4 +1,4 @@
-import { ErrorCodes } from "vue";
+import PasswordWidget from "@/components/Password";
 
 export default {
   name: "Demo",
@@ -7,12 +7,12 @@ export default {
     properties: {
       pass1: {
         type: "string",
-        minLength: "10",
+        minLength: 10,
         title: "password",
       },
       pass2: {
         type: "string",
-        minLength: "10",
+        minLength: 10,
         title: "re try password",
       },
     },
@@ -24,9 +24,15 @@ export default {
           errors.pass2.addError("密码必须相同");
         }
         resolve();
-      }, 2000);
+      }, 0);
     });
   },
-  uiSchema: {},
+  uiSchema: {
+    properties: {
+      pass1: {
+        widget: PasswordWidget,
+      },
+    },
+  },
   default: 1,
 };

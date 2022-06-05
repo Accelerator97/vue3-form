@@ -1,4 +1,4 @@
-import { defineComponent } from "vue";
+import { defineComponent, shallowRef } from "vue";
 import { CommonWidgetsPropsDefined } from "../type";
 
 import { createUseStyles } from "vue-jss";
@@ -24,14 +24,15 @@ const FormItem = defineComponent({
   setup(props, { slots }) {
     const classRef = useStyle();
     return () => {
-      const { schema, error } = props;
+      const { schema, errors } = props;
       const classes = classRef.value;
+      console.log("errors---------", errors);
       return (
         <div class={classes.container}>
           <label class={classes.label}>{schema.title}</label>
           {slots.default && slots.default()}
           <ul class={classes.errText}>
-            {error?.map((i) => (
+            {errors?.map((i) => (
               <li>{i}</li>
             ))}
           </ul>
@@ -46,13 +47,13 @@ export default FormItem;
 // HOC高阶组件
 export function withFormItem(Widget: any) {
   return defineComponent({
-    name: `Wrapped${Widget}`,
+    name: `Wrapped${Widget.name}`,
     props: CommonWidgetsPropsDefined,
-    setup(props, { attrs }) {
+    setup(props, { attrs, slots }) {
       return () => {
         return (
           <FormItem {...props}>
-            <Widget {...props} {...attrs}></Widget>
+            <Widget {...props} {...attrs} slot={slots}></Widget>
           </FormItem>
         );
       };

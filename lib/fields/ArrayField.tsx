@@ -185,7 +185,7 @@ export default defineComponent({
             onChange={props.onChange}
             value={props.value}
             options={options}
-            error={errorSchema.__errors}
+            errors={errorSchema.__errors}
             schema={schema}
           ></SelectionWidget>
         );

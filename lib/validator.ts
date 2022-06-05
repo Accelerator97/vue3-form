@@ -97,7 +97,10 @@ export async function validateFormData(
   }
   let errors = transformErrors(validator.errors);
   if (validationErr) {
-    errors = [...errors, { message: validationErr } as TransformErrorsObejct];
+    errors = [
+      ...errors,
+      { message: (validationErr as any).message } as TransformErrorsObejct,
+    ];
   }
   const errorSchema = toErrorSchema(errors);
 
@@ -123,7 +126,7 @@ export async function validateFormData(
    */
   const proxy = createErrorProxy();
   await customValidate(formData, proxy); // 使用await调用customValidate
-  const newErrorSchema = mergetObjects(errorSchema, proxy);
+  const newErrorSchema = mergetObjects(errorSchema, proxy, true);
   return {
     errors,
     errorSchema: newErrorSchema,
@@ -150,7 +153,7 @@ function createErrorProxy() {
       const res = Reflect.get(target, key, receiver);
       if (!res) {
         const p: any = createErrorProxy();
-        (target as any)[key] = p;
+        Reflect.set(target, key, p, receiver);
         return p;
       }
       return res;

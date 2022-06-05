@@ -85,7 +85,7 @@ export const CommonWidgetsPropsDefined = {
     type: Function as PropType<(v: any) => void>,
     required: true,
   },
-  error: {
+  errors: {
     type: Array as PropType<string[]>,
   },
   schema: {

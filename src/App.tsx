@@ -142,7 +142,7 @@ export default defineComponent({
 
     function validateForm() {
       contextRef.value.doValidate().then((res: any) => {
-        console.log("result", res);
+        console.log("校验的结果-------", res);
       });
     }
 
@@ -207,6 +207,7 @@ export default defineComponent({
                   contextRef={contextRef}
                   ref={nameRef}
                   customValidate={demo.customValidate}
+                  uiSchema={demo.uiSchema || {}}
                 />
               </ThemeProvider>
               {/* <ThemeProvider theme={themeDefault as any}>
