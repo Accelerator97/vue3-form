@@ -5,6 +5,9 @@ import themeDefault from "../lib/theme-default";
 // 测试数据
 import demos from "./demo";
 
+import customFormat from "./plugins/customFormat";
+import customKeyword from "./plugins/customKeyWord";
+
 // 导入组件库
 import SchemaForm, { ThemeProvider } from "../lib";
 
@@ -207,6 +210,8 @@ export default defineComponent({
                   contextRef={contextRef}
                   ref={nameRef}
                   customValidate={demo.customValidate}
+                  customFormat={customFormat}
+                  customKeyWords={customKeyword}
                   uiSchema={demo.uiSchema || {}}
                 />
               </ThemeProvider>

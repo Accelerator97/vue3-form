@@ -6,6 +6,8 @@ import {
   inject,
   ComputedRef,
   shallowRef,
+  ExtractPropTypes,
+  ref,
 } from "vue";
 import {
   Theme,
@@ -13,9 +15,12 @@ import {
   CommonWidgetsNames,
   uiSchema,
   CommonWidgetsDefined,
+  FiledPropsDefine,
 } from "./type";
 
 import { isObject } from "./utils";
+
+import { useVJSFContext } from "./context";
 
 const THEME_PROVIDER_KEY = Symbol();
 
@@ -32,13 +37,25 @@ const ThemeProvider = defineComponent({
   },
 });
 
+// 通过Vue的ExtractPropTypes 将FiledPropsDefine转换为类型
 export function getWidgets<T extends CommonWidgetsNames | SelectionWidgetNames>(
   name: T,
-  uiSchema?: uiSchema,
+  props?: ExtractPropTypes<typeof FiledPropsDefine>,
 ) {
-  if (uiSchema?.widget && isObject(uiSchema.widget)) {
-    return shallowRef(uiSchema.widget as CommonWidgetsDefined);
+  const formatContext = useVJSFContext();
+
+  if (props) {
+    const { uiSchema, schema } = props;
+    if (uiSchema?.widget && isObject(uiSchema.widget)) {
+      return shallowRef(uiSchema.widget as CommonWidgetsDefined);
+    }
+    if (schema.format) {
+      if (formatContext.formatMapRef.value[schema.format]) {
+        return ref(formatContext.formatMapRef.value[schema.format]);
+      }
+    }
   }
+
   const context: ComputedRef<Theme> | undefined =
     inject<ComputedRef<Theme>>(THEME_PROVIDER_KEY);
   if (!context) {

@@ -5,14 +5,19 @@ import ObjectField from "./fields/ObjectField";
 import ArrayField from "./fields/ArrayField";
 import { SchemaTypes, FiledPropsDefine } from "./type";
 import { retrieveSchema } from "./utils";
+import { useVJSFContext } from "./context";
 export default defineComponent({
   name: "SchemaItem",
   props: FiledPropsDefine,
   setup(props, { slots, emit, attrs }) {
+    const formatRef = useVJSFContext();
+
     // computed返回的是一个ref对象
     const retrievedSchemaRef = computed(() => {
       const { schema, rootSchema, value } = props;
-      return retrieveSchema(schema, rootSchema, value);
+      return formatRef.transformSchemaRef.value(
+        retrieveSchema(schema, rootSchema, value),
+      );
     });
     return () => {
       const { schema } = props;

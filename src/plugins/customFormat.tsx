@@ -1,28 +1,33 @@
-import { CommonWidgetsPropsDefined, CommonWidgetsDefined } from "../type";
+import {
+  CommonWidgetsPropsDefined,
+  CustomFormat,
+  CommonWidgetsDefined,
+} from "../../lib";
+import { withFormItem } from "../../lib/theme-default/FormItem";
 import { computed, defineComponent } from "vue";
-import { withFormItem } from "./FormItem";
 
-const TextWidget = withFormItem(
+const component = withFormItem(
   defineComponent({
-    name: "TextWidget",
+    name: "ColorWidget",
     props: CommonWidgetsPropsDefined,
     setup(props) {
       const handleChange = (e: any) => {
-        const v = e.target.value;
+        const value = e.target.value;
         e.target.value = props.value;
-        props.onChange(v);
+        props.onChange(value);
       };
+
       const styleRef = computed(() => {
         return {
           color: (props.options && props.options.color) || "black",
         };
       });
+
       return () => {
-        const { value } = props;
         return (
           <input
-            type="text"
-            value={value as any}
+            type="color"
+            value={props.value as any}
             onInput={handleChange}
             style={styleRef.value}
           />
@@ -32,4 +37,13 @@ const TextWidget = withFormItem(
   }),
 ) as CommonWidgetsDefined;
 
-export default TextWidget;
+const format: CustomFormat = {
+  name: "color",
+  definition: {
+    type: "string",
+    validate: /^#[0-9A-Za-z]{6}$/,
+  },
+  component: component,
+};
+
+export default format;

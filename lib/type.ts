@@ -1,5 +1,6 @@
 import { PropType, DefineComponent, Prop } from "vue";
 import { ErrorSchema } from "./validator";
+import { Format, MacroKeywordDefinition } from "ajv";
 
 export enum SchemaTypes {
   "NUMBER" = "number",
@@ -92,6 +93,9 @@ export const CommonWidgetsPropsDefined = {
     type: Object as PropType<Schema>,
     required: true,
   },
+  options: {
+    type: Object as PropType<{ [keys: string]: any }>,
+  },
 } as const;
 
 export const SelectionWidgetsPropsDefined = {
@@ -138,10 +142,24 @@ export interface Theme {
   };
 }
 
-export interface uiSchema {
+export type uiSchema = {
   widget?: string | CommonWidgetsDefined; // string是已经定义好的NumberWidget/SelectionWidget/TextWidget 后面CommonWidgetsDefined是用户自己定义
   properties?: {
     [key: string]: uiSchema; // 嵌套 向下传递uiSchema
   };
   items?: uiSchema | uiSchema[]; // 针对数组 单类型数组对应uiSchema 多类型数组对应uiSchema[]
+} & {
+  [key: string]: any;
+};
+
+export interface CustomFormat {
+  name: string;
+  definition: Format;
+  component: CommonWidgetsDefined;
+}
+
+export interface CustomKeyWord {
+  name: string;
+  definition: MacroKeywordDefinition;
+  transformSchema: (originSchema: Schema) => Schema;
 }

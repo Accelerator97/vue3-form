@@ -1,4 +1,5 @@
 import {
+  computed,
   defineComponent,
   PropType,
   provide,
@@ -8,12 +9,19 @@ import {
   watch,
   watchEffect,
 } from "vue";
-import { Schema, uiSchema } from "./type";
+import {
+  CommonWidgetsDefined,
+  CustomFormat,
+  CustomKeyWord,
+  Schema,
+  uiSchema,
+} from "./type";
 import SchemaItem from "./SchemaItem";
 import Ajv, { Options } from "ajv";
 import { validateFormData, ErrorSchema } from "./validator";
 
 import { SchemaFormContextKey } from "./context";
+import keyword from "@/plugins/customKeyWord";
 
 interface ContextRef {
   doValidate: () => Promise<{
@@ -53,14 +61,16 @@ export default defineComponent({
     uiSchema: {
       type: Object as PropType<uiSchema>,
     },
+    customFormat: {
+      type: [Object, Array] as PropType<CustomFormat[] | CustomFormat>,
+    },
+    customKeyWords: {
+      type: [Object, Array] as PropType<CustomKeyWord[] | CustomKeyWord>,
+    },
   },
   setup(props, { slots, emit, attrs }) {
     const handleChange = (v: any) => {
       props.onChange(v);
-    };
-
-    const context = {
-      SchemaItem,
     };
 
     const errorsSchemaRef: Ref<ErrorSchema> = shallowRef({});
@@ -74,6 +84,22 @@ export default defineComponent({
         ...defaultAjvOptions,
         ...props.ajvOptions,
       });
+      if (props.customFormat) {
+        const customFormat = Array.isArray(props.customFormat)
+          ? props.customFormat
+          : [props.customFormat];
+        customFormat.forEach((format) => {
+          validateRef.value.addFormat(format.name, format.definition);
+        });
+      }
+      if (props.customKeyWords) {
+        const customKeyWords = Array.isArray(props.customKeyWords)
+          ? props.customKeyWords
+          : [props.customKeyWords];
+        customKeyWords.forEach((keyword) => {
+          validateRef.value.addKeyword(keyword.name, keyword.definition);
+        });
+      }
     });
     const validateResolveRef = ref();
     const validateIndex = ref(0);
@@ -128,6 +154,42 @@ export default defineComponent({
         immediate: true,
       },
     );
+
+    const formatMapRef = computed(() => {
+      if (props.customFormat) {
+        const customFormat = Array.isArray(props.customFormat)
+          ? props.customFormat
+          : [props.customFormat];
+        return customFormat.reduce((result, format) => {
+          result[format.name] = format.component;
+          return result;
+        }, {} as { [key: string]: CommonWidgetsDefined });
+      }
+    });
+
+    const transformSchemaRef = computed(() => {
+      if (props.customKeyWords) {
+        const customKeyWords = Array.isArray(props.customKeyWords)
+          ? props.customKeyWords
+          : [props.customKeyWords];
+        return (schema: Schema) => {
+          let newSchema = schema;
+          customKeyWords.forEach((keyword) => {
+            if ((newSchema as any)[keyword.name]) {
+              newSchema = keyword.transformSchema(schema);
+            }
+          });
+          return newSchema;
+        };
+      }
+      return (s: Schema) => s;
+    });
+
+    const context = {
+      SchemaItem,
+      formatMapRef,
+      transformSchemaRef,
+    };
 
     provide(SchemaFormContextKey, context);
 

@@ -11,13 +11,15 @@ export default defineComponent({
       props.onChange(v);
     };
 
-    // 用computed返回一个响应式对象，当uiSchema变化时 TextWidgetRef也会变化
+    // 用computed返回一个响应式对象，当props变化时 TextWidgetRef也会变化
     const TextWidgetRef = computed(() => {
-      const widgetRef = getWidgets(
-        CommonWidgetsNames.TextWidget,
-        props.uiSchema,
-      );
+      const widgetRef = getWidgets(CommonWidgetsNames.TextWidget, props);
       return widgetRef.value;
+    });
+
+    const WidgetOptionsRef = computed(() => {
+      const { widget, properties, item, ...rest } = props.uiSchema;
+      return rest;
     });
 
     return () => {
@@ -30,6 +32,7 @@ export default defineComponent({
           {...rest}
           errors={errorSchema.__errors}
           onChange={handleChange}
+          options={WidgetOptionsRef.value}
         ></TextWidget>
       );
     };
