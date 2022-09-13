@@ -57,6 +57,7 @@ export const FiledPropsDefine = {
     required: true,
   },
   value: {
+    type: [String, Number, Boolean, Object, Array] as PropType<any>,
     required: true,
   },
   onChange: {
@@ -81,10 +82,12 @@ export type CommonFieldType = DefineComponent<typeof FiledPropsDefine, {}, {}>;
 
 // props类型
 export const CommonWidgetsPropsDefined = {
-  value: {},
+  value: {
+    type: [String, Number, Boolean, Object, Array] as PropType<any>,
+  },
   onChange: {
     type: Function as PropType<(v: any) => void>,
-    required: true,
+    // required: true,
   },
   errors: {
     type: Array as PropType<string[]>,
