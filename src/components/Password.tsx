@@ -13,7 +13,7 @@ const PasswordWidget = withFormItem(
       const handleChange = (e: any) => {
         const v = e.target.value;
         e.target.value = props.value;
-        props.onChange(v);
+        props.onChange!(v);
       };
       return () => {
         const { value } = props;

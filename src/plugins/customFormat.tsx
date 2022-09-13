@@ -14,7 +14,7 @@ const component = withFormItem(
       const handleChange = (e: any) => {
         const value = e.target.value;
         e.target.value = props.value;
-        props.onChange(value);
+        props.onChange!(value);
       };
 
       const styleRef = computed(() => {
