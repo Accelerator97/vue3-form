@@ -70,7 +70,7 @@ export default defineComponent({
   },
   setup(props, { slots, emit, attrs }) {
     const handleChange = (v: any) => {
-      props.onChange(v);
+      props.onChange!(v);
     };
 
     const errorsSchemaRef: Ref<ErrorSchema> = shallowRef({});
@@ -164,6 +164,8 @@ export default defineComponent({
           result[format.name] = format.component;
           return result;
         }, {} as { [key: string]: CommonWidgetsDefined });
+      } else {
+        return {};
       }
     });
 

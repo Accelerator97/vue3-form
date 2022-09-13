@@ -16,7 +16,7 @@ export default defineComponent({
       } else {
         value[key] = v;
       }
-      props.onChange(value);
+      props.onChange!(value);
     };
     return () => {
       const { SchemaItem } = context;

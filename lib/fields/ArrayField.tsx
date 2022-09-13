@@ -47,10 +47,10 @@ const ArrayItemWrapper = defineComponent({
   },
   setup(props, { slots }) {
     const classesRef = useStyles();
-    const handleAdd = () => props.onAdd(props.index);
-    const handleDelete = () => props.onDelete(props.index);
-    const handleUp = () => props.onUp(props.index);
-    const handleDown = () => props.onDown(props.index);
+    const handleAdd = () => props.onAdd!(props.index);
+    const handleDelete = () => props.onDelete!(props.index);
+    const handleUp = () => props.onUp!(props.index);
+    const handleDown = () => props.onDown!(props.index);
     return () => {
       const classes = classesRef.value;
       return (
@@ -88,19 +88,19 @@ export default defineComponent({
       const { value } = props;
       const arr = Array.isArray(value) ? value : [];
       arr[index] = v;
-      props.onChange(arr);
+      props.onChange!(arr);
     };
     const handleAdd = (index: number) => {
       const { value } = props;
       const arr = Array.isArray(value) ? value : [];
       arr.splice(index + 1, 0, undefined);
-      props.onChange(arr);
+      props.onChange!(arr);
     };
     const handleDelete = (index: number) => {
       const { value } = props;
       const arr = Array.isArray(value) ? value : [];
       arr.splice(index, 1);
-      props.onChange(arr);
+      props.onChange!(arr);
     };
     const handleUp = (index: number) => {
       if (index === 0) return;
@@ -108,7 +108,7 @@ export default defineComponent({
       const arr = Array.isArray(value) ? value : [];
       const item = arr.splice(index, 1);
       arr.splice(index - 1, 0, item[0]);
-      props.onChange(arr);
+      props.onChange!(arr);
     };
     const handleDown = (index: number) => {
       const { value } = props;
@@ -116,7 +116,7 @@ export default defineComponent({
       if (index === arr.length - 1) return;
       const item = arr.splice(index, 1);
       arr.splice(index + 1, 0, item[0]);
-      props.onChange(arr);
+      props.onChange!(arr);
     };
     return () => {
       const { schema, rootSchema, value, errorSchema, uiSchema } = props;
@@ -182,7 +182,7 @@ export default defineComponent({
         }));
         return (
           <SelectionWidget
-            onChange={props.onChange}
+            onChange={props.onChange!}
             value={props.value}
             options={options}
             errors={errorSchema.__errors}

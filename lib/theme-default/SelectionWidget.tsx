@@ -12,7 +12,7 @@ const Selection = withFormItem(
       // currentValueRef变化了 就调用props的onChange事件
       watch(currentValueRef, (newVal, oldVal) => {
         if (newVal === props.value) return;
-        props.onChange(newVal);
+        props.onChange!(newVal);
       });
       // 如果props的value变化了，currentValueRef也要跟着变化
       watch(

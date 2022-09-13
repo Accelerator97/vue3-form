@@ -31,7 +31,11 @@ export default defineComponent({
   setup(props) {
     return () => (
       <ThemeProvider theme={defaultTheme}>
-        <JSONSchemaForm {...props} />
+        <JSONSchemaForm
+          schema={props.schema}
+          onChange={props.onChange!}
+          value={props.value}
+        />
       </ThemeProvider>
     );
   },

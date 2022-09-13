@@ -11,9 +11,9 @@ export default defineComponent({
       e.target.value = props.value;
       const num = Number(value);
       if (Number.isNaN(num)) {
-        props.onChange(undefined);
+        props.onChange!(undefined);
       } else {
-        props.onChange(num);
+        props.onChange!(num);
       }
     };
     const NumberWidgetRef = getWidgets(CommonWidgetsNames.NumberWidget);

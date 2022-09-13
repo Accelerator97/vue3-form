@@ -1,4 +1,4 @@
-import { defineComponent, shallowRef } from "vue";
+import { defineComponent } from "vue";
 import { CommonWidgetsPropsDefined } from "../type";
 
 import { createUseStyles } from "vue-jss";

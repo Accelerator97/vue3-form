@@ -10,7 +10,7 @@ const TextWidget = withFormItem(
       const handleChange = (e: any) => {
         const v = e.target.value;
         e.target.value = props.value;
-        props.onChange(v);
+        props.onChange!(v);
       };
       const styleRef = computed(() => {
         return {
